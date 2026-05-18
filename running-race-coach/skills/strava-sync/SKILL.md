@@ -1,13 +1,20 @@
 ---
 name: strava-sync
-description: Downloads and syncs training data from Strava. Stores the last week's worth of activities in the training-log folder as markdown summaries, including lap details for workout runs.
+description: Downloads and syncs training data from Strava using the Strava MCP server. This is ONE option for importing training data - athletes can also use manual logs, other platforms (Garmin, Apple Health), or provide data conversationally. Use this skill specifically when the athlete wants to sync from Strava or when the running-coach indicates Strava as the chosen data source. Stores activities in the training-log folder as markdown summaries, including lap details for workout runs.
 ---
 
 # Strava Training Log Sync
 
 ## Overview
 
-This skill downloads training data from Strava and creates weekly markdown summaries in the `training-log` folder. Each week is stored as a single markdown file with detailed activity summaries, including lap details for runs marked as workouts.
+This skill downloads training data from Strava using the Strava MCP server and creates weekly markdown summaries in the `training-log` folder. Each week is stored as a single markdown file with detailed activity summaries, including lap details for runs marked as workouts.
+
+**Note**: This is a Strava-specific data import tool. The running coach system also supports:
+- Other platforms (Garmin Connect, Apple Health, Polar Flow, etc.) - athlete provides data
+- Manual training logs - athlete creates markdown files directly
+- Conversational input - athlete describes training verbally
+
+This skill uses MCP tools specific to Strava (`mcp__strava__*`). Similar skills could be created for other platforms using their respective APIs or MCP servers.
 
 ## Workflow
 

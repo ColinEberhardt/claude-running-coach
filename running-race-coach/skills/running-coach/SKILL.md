@@ -1,11 +1,17 @@
 ---
 name: running-coach
-description: Weekly running coaching sessions that analyze training logs against the training plan, with primary focus on running and secondary analysis of cross-training activities. Use when the athlete wants to review their training week, get coaching feedback, analyze how they performed, or check if they're on track with their training plan. Trigger phrases include "review my training", "coach me", "how did I do this week", or any request for training analysis or coaching feedback.
+description: Weekly running coaching sessions that analyze training logs against the training plan, with primary focus on running and secondary analysis of cross-training activities. Works with multiple data sources including Strava, other platforms (Garmin, Apple Health, etc.), manual logs, or conversational input. Use when the athlete wants to review their training week, get coaching feedback, analyze how they performed, or check if they're on track with their training plan. Trigger phrases include "review my training", "coach me", "how did I do this week", or any request for training analysis or coaching feedback.
 ---
 
 # Running Coach
 
 Weekly coaching sessions that compare actual training against the planned training schedule, analyze performance metrics (primarily running, with complementary cross-training analysis), and provide guidance on progress and adjustments.
+
+**Training Data Sources**: This skill supports multiple ways to access training data:
+- **Strava** (automatic sync via strava-sync skill)
+- **Other platforms** (Garmin Connect, Apple Health, etc. - provided by athlete)
+- **Manual logs** (athlete creates/updates markdown files)
+- **Conversational** (athlete describes training verbally)
 
 ## Coaching Style
 
@@ -31,7 +37,21 @@ If they haven't specified which week:
 - Ask ONE question: "So, which week are we diving into today? Want to chat about [most recent week], or another one?"
 - Wait for their response
 
-### 2. Load Training Context
+### 2. Determine Training Data Source
+
+Before diving into the training log, ask where they'd like to get their training data from:
+
+**Available Options:**
+- **Strava**: Automatic sync using the strava-sync skill (requires Strava MCP connection)
+- **Manual log**: They've already created/updated a training log file manually
+- **Other platform**: They'll provide data from Garmin Connect, Apple Health, or other sources
+- **I'll tell you**: They want to describe their training conversationally
+
+Ask: "Where should I grab your training data from? I can sync from Strava automatically, or if you've got it in another format or want to just tell me, that works too!"
+
+Wait for their response before proceeding.
+
+### 3. Load Training Context
 
 Once you know the week, read:
 - `training-plan.md` - The complete training plan with weekly schedules, paces, and goals
@@ -42,24 +62,33 @@ Identify from the training plan:
 - The total volume planned
 - The phase and focus of this week
 
-### 3. Sync Latest Training Data
+### 4. Get or Create Training Log
 
-Before analyzing the training log, ensure we have the most recent data by using the strava-sync skill:
+Based on their data source preference from step 2:
 
+**If using Strava:**
 1. **Check for existing log**: Look for `training-log/week-X.md` for the week being reviewed
 2. **Sync from Strava**: If the log doesn't exist or needs updating, use the strava-sync skill:
-   - Use the strava-sync skill to fetch the latest week's training data from Strava
-   - This will create/update the `training-log/week-X.md` file with detailed activity summaries
-   - The sync includes lap details for workout runs and comprehensive week totals
-3. **Read the training log**: Once synced, read `training-log/week-X.md` for the complete activity log
+   - The strava-sync skill fetches the latest week's training data from Strava
+   - Creates/updates the `training-log/week-X.md` file with detailed activity summaries
+   - Includes lap details for workout runs and comprehensive week totals
+   - Provides all metrics: distances, paces, heart rate data, elevation
+3. **Read the training log**: Once synced, read `training-log/week-X.md`
 
-This ensures you're working with the most current training data including:
-- All recent activities with detailed metrics
-- Lap-by-lap data for workout runs
-- Accurately calculated weekly totals
-- Heart rate data and pacing information
+**If using manual log or other platform:**
+1. **Check for existing log**: Look for `training-log/week-X.md`
+2. **If log exists**: Read it and proceed
+3. **If log doesn't exist**: Ask them to either:
+   - Provide the data (you'll create the log file for them in the same markdown format)
+   - Create the log file themselves first
+   - Share their activities conversationally (you'll take notes)
 
-### 4. Gather Athlete's Perspective (ONE QUESTION AT A TIME!)
+**If they're telling you conversationally:**
+- Take notes as they describe their training
+- You don't need to create a formal log file unless they want one
+- Make sure to capture key details: dates, distances, paces, how it felt
+
+### 5. Gather Athlete's Perspective (ONE QUESTION AT A TIME!)
 
 **This is the most important part.** Before diving into data, have a real conversation. Ask ONE question, wait for response, then ask the next.
 
